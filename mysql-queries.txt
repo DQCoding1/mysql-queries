@@ -1,0 +1,191 @@
+// DATA TYPES
+decimal(max total digits, total decimals)
+date (year, month, day)
+unique (the column values can not be repeated)
+not null 
+default 0.00
+
+
+
+// DB
+create database mydb;
+use mydb;
+drop database mydb;
+
+
+
+
+// TABLE
+create table employees (
+	employee_id int,
+    first_name varchar(30),
+    last_name varchar(30),
+    hourly_pay decimal(5, 2), 
+    hire_date date
+);
+
+
+
+
+rename table employees to workers;
+drop table employees;
+alter table employees add column phone varchar(15);
+alter table employees rename column phone to email;
+alter table employees modify column email varchar(30);
+alter table employees modify email varchar(30) after last_name;
+alter table employees modify email varchar(30) first;
+alter table employees drop column email;
+
+
+
+insert into employees 
+values  (1, "diego", "quintero", 999.99, "2023-01-06"),
+	(2, "alejandro", "bohorquez", 232.44, "2023-07-05");
+
+insert into employees (employee_id, first_name ) values (3, "asd");
+								
+
+
+
+// SELECT 
+select * from employees;
+select last_name from employees;
+select last_name, first_name from employees;
+select * from employees where employee_id = 1;
+select last_name from employees where employee_id != 1;
+select first_name from employees where last_name = "quintero";
+
+
+
+// UPDATE
+update employees set last_name = "fgh" where first_name = "asd";
+
+
+// DELETE
+ delete from employees where last_name = "fgh";
+
+
+
+
+// COMMIT 
+set autocommit = off;
+commit; (checkpoint)
+rollback; (return to last checkpoint);
+
+
+
+
+
+
+
+
+// PRIMARY KEY 
+create table customers(
+  customer_id int primary key auto_increment,
+  first_name varchar(50),
+  last_name varchar(50)
+);
+
+
+create table customers(
+  customer_id int auto_increment,
+  first_name varchar(50),
+  last_name varchar(50),
+  primary key(customer_id)
+);
+
+
+insert into customers (first_name, last_name) 
+values ("fred", "lobster"),
+       ("patrick", "smith");
+
+
+
+
+
+
+// FOREIGN KEY 
+create table transactions (
+    transaction_id int primary key auto_increment,
+    amount decimal(5,2),
+    customer_id int,
+    foreign key (customer_id) references customers (customer_id)
+);
+
+insert into transactions (amount, customer_id) 
+values  (2.99, 1),
+	(3.45, 2),
+        (6.79, 1)
+
+
+
+
+
+
+
+// INNER JOIN
+select *
+from transactions inner join customers
+on transactions.customer_id = customers.customer_id;
+
+
+
+
+
+
+// FUNCTIONS
+select count(customer_id) from transactions;
+select max(amount) from transactions;
+select min(amount) from transactions;
+select avg(amount) from transactions;
+select sum(amount) from transactions;
+select concat(first_name, " ", last_name) as fullname from customers;
+
+
+
+
+
+
+// AND OR
+select amount from transactions where customer_id = 1 and amount >= 3;
+select amount from transactions where customer_id = 1 or amount >= 3;
+
+
+
+
+// WILD CHARACTERS 
+// % cointains
+select  * from customers where first_name like "f%";
+
+// _ random character 
+select  * from customers where first_name like "_reya";
+select  * from customers where first_name like "_r%";
+
+
+
+
+
+order by
+select * from customers order by customer_id;
+select * from customers order by customer_id asc;
+select * from customers order by customer_id desc;
+select * from transactions order by amount, customer_id;
+(if two values are the same it orders by the other column specified)
+
+
+
+
+
+// SUBQUERIES
+select amount, (select avg(amount) from transactions) as average from transactions;
+
+
+
+
+
+
+
+
+// GROUP BY
+select customer_id, sum(amount) from transactions group by (customer_id);
+  
